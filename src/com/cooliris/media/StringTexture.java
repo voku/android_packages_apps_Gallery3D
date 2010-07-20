@@ -28,10 +28,16 @@ import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
 import android.util.FloatMath;
+import android.text.FriBidi;
+
+import java.util.Locale;
+import java.util.Locale;
 
 import com.cooliris.app.App;
 
 public final class StringTexture extends Texture {
+    protected FriBidi mFriBidi;
+    private boolean mRTL = false;
     private String mString;
     private Config mConfig;
     private Paint mPaint;
@@ -76,6 +82,13 @@ public final class StringTexture extends Texture {
 
     public StringTexture(String string) {
         mString = string;
+        mFriBidi = new FriBidi(mString);
+        mFriBidi.reorderOnce();
+        if ("fa".equals(Locale.getDefault().getLanguage())
+        	|| "ar".equals(Locale.getDefault().getLanguage())
+        	|| "he".equals(Locale.getDefault().getLanguage())) {
+        	mRTL = true;
+        }
         mConfig = Config.DEFAULT_CONFIG_SCALED;
     }
 
@@ -85,6 +98,13 @@ public final class StringTexture extends Texture {
 
     public StringTexture(String string, Config config, int width, int height) {
         mString = string;
+        mFriBidi = new FriBidi(mString);
+        mFriBidi.reorderOnce();
+        if ("fa".equals(Locale.getDefault().getLanguage())
+            	|| "ar".equals(Locale.getDefault().getLanguage())
+            	|| "he".equals(Locale.getDefault().getLanguage())) {
+            	mRTL = true;
+        }
         mConfig = config;
         mWidth = width;
         mHeight = height;
@@ -94,7 +114,7 @@ public final class StringTexture extends Texture {
         Paint paint = computePaint();
         if (paint != null) {
             if (mString != null)
-                return paint.measureText(mString);
+                return paint.measureText(mFriBidi.str);
             else
                 return 0;
         } else {
@@ -130,9 +150,15 @@ public final class StringTexture extends Texture {
         paint.setStrikeThruText(config.strikeThrough);
         // int originX = 0;
         if (config.xalignment == Config.ALIGN_LEFT) {
-            paint.setTextAlign(Align.LEFT);
+        	if (mRTL)
+        		paint.setTextAlign(Align.RIGHT);
+        	else
+        		paint.setTextAlign(Align.LEFT);
         } else if (config.xalignment == Config.ALIGN_RIGHT) {
-            paint.setTextAlign(Align.RIGHT);
+        	if (mRTL)
+        		paint.setTextAlign(Align.LEFT);
+        	else
+        		paint.setTextAlign(Align.RIGHT);
             // originX = (int)config.width;
         } else {
             paint.setTextAlign(Align.CENTER);
@@ -140,7 +166,7 @@ public final class StringTexture extends Texture {
         }
         if (config.italic)
             paint.setTextSkewX(-0.25f);
-        String stringToDraw = mString;
+        String stringToDraw = mFriBidi.str;
         paint.setTextSize(config.fontSize);
         if (config.sizeMode == Config.SIZE_TEXT_TO_BOUNDS) {
             // we have to compute the fontsize appropriately
@@ -164,7 +190,7 @@ public final class StringTexture extends Texture {
         if (mString == null)
             return null;
         Paint paint = computePaint();
-        String stringToDraw = mString;
+        String stringToDraw = mFriBidi.str;
         Config config = mConfig;
         Bitmap.Config bmConfig = Bitmap.Config.ARGB_4444;
         Paint.FontMetricsInt metrics = paint.getFontMetricsInt();
@@ -175,7 +201,7 @@ public final class StringTexture extends Texture {
         int backWidth = mWidth;
         int backHeight = mHeight;
 
-        String string = mString;
+        String string = mFriBidi.str;
         Rect bounds = new Rect();
         paint.getTextBounds(string, 0, string.length(), bounds);
 
@@ -190,8 +216,13 @@ public final class StringTexture extends Texture {
         Bitmap bitmap = Bitmap.createBitmap(backWidth, backHeight, bmConfig);
         Canvas canvas = new Canvas(bitmap);
         // for top
-        int x = (config.xalignment == Config.ALIGN_LEFT) ? padding : (config.xalignment == Config.ALIGN_RIGHT ? backWidth - padding
-                : backWidth / 2);
+        int x;
+        if (mRTL)
+	        x = (config.xalignment == Config.ALIGN_RIGHT) ? padding : (config.xalignment == Config.ALIGN_LEFT ? backWidth - padding
+	                : backWidth / 2);
+        else
+	        x = (config.xalignment == Config.ALIGN_LEFT) ? padding : (config.xalignment == Config.ALIGN_RIGHT ? backWidth - padding
+	                : backWidth / 2);
         int y = (config.yalignment == Config.ALIGN_TOP) ? -metrics.top + padding
                 : ((config.yalignment == Config.ALIGN_BOTTOM) ? (backHeight - descent)
                         : ((int) backHeight - (descent + ascent)) / 2);
@@ -202,14 +233,25 @@ public final class StringTexture extends Texture {
             // Fade the right edge of the string if the text overflows. TODO:
             // BIDI text should fade on the left.
             float gradientLeft = backWidth - Config.FADE_WIDTH;
-            LinearGradient gradient = new LinearGradient(gradientLeft, 0, backWidth, 0, 0xffffffff, 0x00ffffff,
-                    Shader.TileMode.CLAMP);
+            float gradientRight = Config.FADE_WIDTH;
+            LinearGradient gradient;
+            if (mRTL) {
+                gradient = new LinearGradient(0, 0, gradientRight, 0, 0x00ffffff, 0xffffffff,
+                        Shader.TileMode.CLAMP);
+            } else {
+	            gradient = new LinearGradient(gradientLeft, 0, backWidth, 0, 0xffffffff, 0x00ffffff,
+	                    Shader.TileMode.CLAMP);
+            }
             paint = new Paint();
             paint.setSubpixelText(true);
             paint.setShader(gradient);
             paint.setDither(true);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
-            canvas.drawRect(gradientLeft, 0, backWidth, backHeight, paint);
+            if (mRTL) {
+            	canvas.drawRect(0, 0, gradientLeft, backHeight, paint);
+            } else {
+            	canvas.drawRect(gradientLeft, 0, backWidth, backHeight, paint);
+            }
         }
 
         mBaselineHeight = padding + metrics.bottom;
