@@ -30,13 +30,9 @@ import android.graphics.Paint.Align;
 import android.util.FloatMath;
 import android.text.FriBidi;
 
-import java.util.Locale;
-import java.util.Locale;
-
 import com.cooliris.app.App;
 
 public final class StringTexture extends Texture {
-    protected FriBidi mFriBidi;
     private boolean mRTL = false;
     private String mString;
     private Config mConfig;
@@ -82,13 +78,7 @@ public final class StringTexture extends Texture {
 
     public StringTexture(String string) {
         mString = string;
-        mFriBidi = new FriBidi(mString);
-        mFriBidi.reorderOnce();
-        if ("fa".equals(Locale.getDefault().getLanguage())
-        	|| "ar".equals(Locale.getDefault().getLanguage())
-        	|| "he".equals(Locale.getDefault().getLanguage())) {
-        	mRTL = true;
-        }
+        mRTL = FriBidi.isRTL();
         mConfig = Config.DEFAULT_CONFIG_SCALED;
     }
 
@@ -98,13 +88,7 @@ public final class StringTexture extends Texture {
 
     public StringTexture(String string, Config config, int width, int height) {
         mString = string;
-        mFriBidi = new FriBidi(mString);
-        mFriBidi.reorderOnce();
-        if ("fa".equals(Locale.getDefault().getLanguage())
-            	|| "ar".equals(Locale.getDefault().getLanguage())
-            	|| "he".equals(Locale.getDefault().getLanguage())) {
-            	mRTL = true;
-        }
+        mRTL = FriBidi.isRTL();
         mConfig = config;
         mWidth = width;
         mHeight = height;
@@ -114,7 +98,7 @@ public final class StringTexture extends Texture {
         Paint paint = computePaint();
         if (paint != null) {
             if (mString != null)
-                return paint.measureText(mFriBidi.str);
+                return paint.measureText(mString);
             else
                 return 0;
         } else {
@@ -166,7 +150,7 @@ public final class StringTexture extends Texture {
         }
         if (config.italic)
             paint.setTextSkewX(-0.25f);
-        String stringToDraw = mFriBidi.str;
+        String stringToDraw = mString;
         paint.setTextSize(config.fontSize);
         if (config.sizeMode == Config.SIZE_TEXT_TO_BOUNDS) {
             // we have to compute the fontsize appropriately
@@ -190,7 +174,7 @@ public final class StringTexture extends Texture {
         if (mString == null)
             return null;
         Paint paint = computePaint();
-        String stringToDraw = mFriBidi.str;
+        String stringToDraw = mString;
         Config config = mConfig;
         Bitmap.Config bmConfig = Bitmap.Config.ARGB_4444;
         Paint.FontMetricsInt metrics = paint.getFontMetricsInt();
@@ -201,7 +185,7 @@ public final class StringTexture extends Texture {
         int backWidth = mWidth;
         int backHeight = mHeight;
 
-        String string = mFriBidi.str;
+        String string = mString;
         Rect bounds = new Rect();
         paint.getTextBounds(string, 0, string.length(), bounds);
 
