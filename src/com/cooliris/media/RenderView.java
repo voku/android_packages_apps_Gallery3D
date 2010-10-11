@@ -231,25 +231,28 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                 int height = bitmap.getHeight();
                 texture.mWidth = width;
                 texture.mHeight = height;
-                // Create a padded bitmap if the natural size is not a power of
-                // 2.
-                if (!Shared.isPowerOf2(width) || !Shared.isPowerOf2(height)) {
-                    int paddedWidth = Shared.nextPowerOf2(width);
-                    int paddedHeight = Shared.nextPowerOf2(height);
-                    Bitmap.Config config = bitmap.getConfig();
-                    if (config == null)
-                        config = Bitmap.Config.RGB_565;
-                    if (width * height >= 512 * 512)
-                        config = Bitmap.Config.RGB_565;
-                    Bitmap padded = Bitmap.createBitmap(paddedWidth, paddedHeight, config);
-                    Canvas canvas = new Canvas(padded);
-                    canvas.drawBitmap(bitmap, 0, 0, null);
-                    bitmap.recycle();
-                    bitmap = padded;
-                    // Store normalized width and height for use in texture
-                    // coordinates.
-                    texture.mNormalizedWidth = (float) width / (float) paddedWidth;
-                    texture.mNormalizedHeight = (float) height / (float) paddedHeight;
+                if (width<=128 || height<=128)
+                {
+                    // Create a padded bitmap if the natural size is not a power of
+                    // 2.
+                    if (!Shared.isPowerOf2(width) || !Shared.isPowerOf2(height)) {
+                        int paddedWidth = Shared.nextPowerOf2(width);
+                        int paddedHeight = Shared.nextPowerOf2(height);
+                        Bitmap.Config config = bitmap.getConfig();
+                        if (config == null)
+                            config = Bitmap.Config.RGB_565;
+                        if (width * height >= 512 * 512)
+                            config = Bitmap.Config.RGB_565;
+                        Bitmap padded = Bitmap.createBitmap(paddedWidth, paddedHeight, config);
+                        Canvas canvas = new Canvas(padded);
+                        canvas.drawBitmap(bitmap, 0, 0, null);
+                        bitmap.recycle();
+                        bitmap = padded;
+                        // Store normalized width and height for use in texture
+                        // coordinates.
+                        texture.mNormalizedWidth = (float) width / (float) paddedWidth;
+                        texture.mNormalizedHeight = (float) height / (float) paddedHeight;
+                    }
                 } else {
                     texture.mNormalizedWidth = 1.0f;
                     texture.mNormalizedHeight = 1.0f;
