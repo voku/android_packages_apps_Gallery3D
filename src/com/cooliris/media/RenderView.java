@@ -860,7 +860,7 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
         //Process.setThreadPriority(Process.THREAD_PRIORITY_DISPLAY);
 
         // Disable unused state.
-        gl.glEnable(GL11.GL_DITHER);
+        gl.glDisable(GL11.GL_DITHER);
         gl.glDisable(GL11.GL_LIGHTING);
 
         // Set global state.

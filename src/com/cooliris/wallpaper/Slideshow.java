@@ -60,7 +60,7 @@ public class Slideshow extends SurfaceView implements SurfaceHolder.Callback {
     private static final Paint sPaint = new Paint();
     static {
         sPaint.setFilterBitmap(true);
-        sPaint.setDither(true);
+        sPaint.setDither(false);
     }
     private boolean mVisible = true;
     private DataSource mSource;

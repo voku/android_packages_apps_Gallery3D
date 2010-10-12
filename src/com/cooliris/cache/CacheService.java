@@ -776,7 +776,7 @@ public final class CacheService extends IntentService {
         final Bitmap finalBitmap = Bitmap.createBitmap(thumbnailWidth, thumbnailHeight, Bitmap.Config.RGB_565);
         final Canvas canvas = new Canvas(finalBitmap);
         final Paint paint = new Paint();
-        paint.setDither(true);
+        paint.setDither(false);
         paint.setFilterBitmap(true);
         canvas.drawColor(0);
         canvas.drawBitmap(bitmap, new Rect(cropX, cropY, cropX + cropWidth, cropY + cropHeight), new Rect(0, 0, thumbnailWidth,

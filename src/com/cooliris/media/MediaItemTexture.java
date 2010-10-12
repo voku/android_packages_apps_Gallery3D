@@ -222,7 +222,7 @@ public final class MediaItemTexture extends Texture {
                     item.mThumbnailFocusY = dataInput.readShort();
                     // Decode the thumbnail.
                     final BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inDither = true;
+                    options.inDither = false;
                     options.inScaled = false;
                     options.inPreferredConfig = Bitmap.Config.RGB_565;
                     final Bitmap bitmap = BitmapFactory.decodeByteArray(data, CACHE_HEADER_SIZE, data.length - CACHE_HEADER_SIZE,
