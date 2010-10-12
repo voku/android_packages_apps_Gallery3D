@@ -332,7 +332,15 @@ public final class GridDrawManager {
             view.setAlpha(1.0f);
             gl.glEnable(GL11.GL_BLEND);
             gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+            if (slideshowMode)
+            {
+                gl.glEnable(GL11.GL_BLEND);
+                gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+            } else {
+                gl.glDisable(GL11.GL_BLEND);
+            }
             float backupImageTheta = 0.0f;
+            gl.glDisable(GL11.GL_DEPTH_TEST);
             for (int i = -1; i <= 1; ++i) {
                 if (slideshowMode && timeElapsedSinceView > 1.0f && i != 0)
                     continue;
@@ -466,6 +474,7 @@ public final class GridDrawManager {
                     }
                 }
             }
+        gl.glEnable(GL11.GL_DEPTH_TEST);
         }
     }
 
@@ -767,7 +776,11 @@ public final class GridDrawManager {
             orientation = displayItem.mAnimatedImageTheta;
         }
         if (pass == PASS_FRAME || pass == PASS_FRAME_PLACEHOLDER) {
+            if (pass == PASS_FRAME_PLACEHOLDER) {
+                    gl.glDisable(GL11.GL_DEPTH_TEST);
+            }
             GridQuadFrame.draw(gl);
+            gl.glEnable(GL11.GL_DEPTH_TEST);
         } else {
             GridQuad.draw(gl, orientation);
         }
