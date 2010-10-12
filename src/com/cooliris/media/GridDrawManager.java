@@ -423,7 +423,7 @@ public final class GridDrawManager {
                         float v = texture.getNormalizedHeight();
                         float imageWidth = texture.getWidth();
                         float imageHeight = texture.getHeight();
-                        boolean portrait = ((theta / 90) % 2 == 1);
+                        boolean portrait = ((Math.abs(theta) / 90) % 2 == 1);
                         if (portrait) {
                             viewAspect = 1.0f / viewAspect;
                         }
