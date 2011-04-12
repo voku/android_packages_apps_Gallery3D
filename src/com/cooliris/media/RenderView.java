@@ -578,6 +578,17 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
         }
     }
 
+    public void regListener() {
+        Sensor sensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (sensorAccelerometer != null) {
+            mSensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        }
+    }
+
+    public void unregListener() {
+        mSensorManager.unregisterListener(this);
+    }
+
     private final boolean ENABLE_FPS_TEST = false;
     private int mFrameCount = 0;
     private long mFrameCountingStart = 0;
