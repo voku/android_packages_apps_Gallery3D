@@ -27,6 +27,7 @@
         <activity android:name="com.cooliris.media.Gallery" android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="sensor"
             android:clearTaskOnLaunch="true" android:noHistory="false"
             android:stateNotNeeded="true">
             <intent-filter>
