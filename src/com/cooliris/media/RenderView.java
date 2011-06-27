@@ -663,8 +663,7 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
             gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             gl.glEnable(GL11.GL_SCISSOR_TEST);
             gl.glScissor(0, 0, getWidth(), getHeight());
-            gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
             // Run the opaque pass.
             gl.glDisable(GL11.GL_BLEND);
             final ArrayList<Layer> opaqueList = lists.opaqueList;

@@ -202,7 +202,6 @@ public final class PathBarLayer extends Layer {
         float height = mHeight;
         synchronized (mComponents) {
             int numComponents = mComponents.size();
-            gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
             for (int i = 0; i < numComponents; ++i) {
                 Component component = mComponents.get(i);
                 component.x = x;
@@ -247,7 +246,6 @@ public final class PathBarLayer extends Layer {
                 x += (int) (width + (21 * App.PIXEL_DENSITY + 0.5f));
             }
         }
-        gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     private Component hitTestItems(float x, float y) {

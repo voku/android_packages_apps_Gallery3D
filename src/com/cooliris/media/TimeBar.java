@@ -385,19 +385,15 @@ public final class TimeBar extends Layer implements MediaFeed.Listener {
         if (!mShowTime) {
             if (view.bind(knob)) {
                 final float knobWidth = knob.getWidth();
-                gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 view.draw2D(scrolledOriginX + getKnobXForPosition(position) - knobWidth * 0.5f, originY, 0f, knobWidth, knob
                         .getHeight());
-                gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             }
         } else {
             if (view.bind(knob)) {
                 final float knobWidth = knob.getWidth();
                 final float knobHeight = knob.getHeight();
-                gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 view.draw2D(scrolledOriginX + getKnobXForPosition(position) - knobWidth * 0.5f, view.getHeight() - knobHeight, 0f,
                         knobWidth, knobHeight);
-                gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             }
             // we draw the current time on top of the knob
             if (mInDrag || mAnimTextAlpha != 0.0f) {

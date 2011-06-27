@@ -93,8 +93,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
     private final DisplaySlot[] mDisplaySlots = new DisplaySlot[MAX_DISPLAY_SLOTS];
     private ArrayList<MediaItem> mVisibleItems;
 
-    private float mTimeElapsedSinceTransition;
-    //private final BackgroundLayer mBackground;
+    private final BackgroundLayer mBackground;
     private boolean mLocationFilter;
     private float mZoomValue = 1.0f;
     private float mCurrentFocusItemWidth = 1.0f;
@@ -127,7 +126,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
     // private LongSparseArray<Integer> mOldBreakSlots;
 
     public GridLayer(Context context, int itemWidth, int itemHeight, LayoutInterface layoutInterface, RenderView view) {
-        //mBackground = new BackgroundLayer(this);
+        mBackground = new BackgroundLayer(this);
         mContext = context;
         mView = view;
 
@@ -200,7 +199,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
 
     public void stop() {
         endSlideshow();
-        //mBackground.clear();
+        mBackground.clear();
         handleLowMemory();
     }
 
@@ -208,7 +207,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
     public void generate(RenderView view, RenderView.Lists lists) {
         lists.updateList.add(this);
         lists.opaqueList.add(this);
-        //mBackground.generate(view, lists);
+        mBackground.generate(view, lists);
         lists.blendedList.add(this);
         lists.hitTestList.add(this);
         mHud.generate(view, lists);
@@ -218,8 +217,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
     protected void onSizeChanged() {
         mHud.setSize(mWidth, mHeight);
         mHud.setAlpha(1.0f);
-        //mBackground.setSize(mWidth, mHeight);
-        mTimeElapsedSinceTransition = 0.0f;
+        mBackground.setSize(mWidth, mHeight);
         if (mView != null) {
             mView.requestRender();
         }
@@ -434,7 +432,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
 
             feed.shutdown();
             mDisplayList.clear();
-            //mBackground.clear();
+            mBackground.clear();
         }
 
         mMediaFeed.start();
@@ -764,7 +762,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
     public void handleLowMemory() {
         clearUnusedThumbnails();
         GridDrawables.sStringTextureTable.clear();
-        //mBackground.clearCache();
+        mBackground.clearCache();
     }
 
     // This method can be potentially expensive
@@ -779,7 +777,7 @@ public final class GridLayer extends RootLayer implements MediaFeed.Listener, Ti
         mHud.reset();
         GridDrawables.sStringTextureTable.clear();
         mDrawables.onSurfaceCreated(view, gl);
-        //mBackground.clear();
+        mBackground.clear();
     }
 
     @Override
