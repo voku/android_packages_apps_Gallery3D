@@ -187,7 +187,7 @@ public final class PopupMenu extends Layer {
         if (showRatio < 0.003f && !show) {
             setHidden(true);
         }
-
+        gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
         // Draw the selection menu with the show animation.
         int x = (int) mX;
         int y = (int) mY;
@@ -210,7 +210,7 @@ public final class PopupMenu extends Layer {
                 view.resetColor();
             }
         }
-
+        gl.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
     }
 
     private void layout() {
