@@ -153,8 +153,6 @@ public final class Gallery extends Activity {
             }
         };
 
-        sendInitialMessage();
-
         Log.i(TAG, "onCreate");
     }
 
@@ -185,6 +183,7 @@ public final class Gallery extends Activity {
 
     @Override
     public void onStart() {
+        sendInitialMessage();
         super.onStart();
     }
 
