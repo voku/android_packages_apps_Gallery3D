@@ -34,11 +34,14 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.FloatMath;
 import android.view.MotionEvent;
+import android.util.Log;
+import android.database.Cursor;
 
 import com.cooliris.app.App;
 import com.cooliris.app.Res;
 import com.cooliris.media.MenuBar.Menu;
 import com.cooliris.media.PopupMenu.Option;
+import java.io.IOException;
 
 public final class HudLayer extends Layer {
     public static final int MODE_NORMAL = 0;
@@ -381,6 +384,29 @@ public final class HudLayer extends Layer {
                             intent.setClass(mContext, CropImage.class);
                             intent.setData(Uri.parse(item.mContentUri));
                             ((Activity) mContext).startActivityForResult(intent, CropImage.CROP_MSG_INTERNAL);
+                        }
+
+                    }),
+                    new PopupMenu.Option("Resize", mContext.getResources().getDrawable(
+                            Res.drawable.ic_menu_crop), new Runnable() {
+                        public void run() {
+                            ArrayList<MediaBucket> buckets = mGridLayer.getSelectedBuckets();
+                            MediaItem item = MediaBucketList.getFirstItemSelection(buckets);
+                            if (item == null || item.mContentUri == null) {
+                                return;
+                            }
+                            mGridLayer.deselectAll();
+                            String[] proj = { MediaStore.Images.Media.DATA };
+                            Cursor actualimagecursor = ((Activity) mContext).managedQuery(Uri.parse(item.mContentUri), proj, null, null, null);
+                            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA); 
+                            actualimagecursor.moveToFirst();
+                            String img_path = actualimagecursor.getString(actual_image_column_index);
+                            Log.v("ResizeImage", "Uri = " + img_path);
+                            try {
+                                Process process = Runtime.getRuntime().exec("gst-launch filesrc location=" + img_path + " ! jpegdec ! videoscale ! video/x-raw-yuv, width=640, pixel-aspect-ratio=1/1 ! jpegenc quality=70 ! filesink location=" + img_path + "_resize.jpg");
+                            } catch (IOException e) {
+                                Log.v("ResizeImage", "IOException");
+                            }
                         }
                     }) };
         }
