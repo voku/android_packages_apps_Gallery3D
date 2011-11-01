@@ -16,8 +16,8 @@
 
 <resources>
 
-    <integer name="max_resolution">2048</integer>
-    <integer name="max_resolution_screennail">1024</integer>
+    <integer name="max_resolution">1024</integer>
+    <integer name="max_resolution_screennail">512</integer>
     <bool name="button_brightness_override">true</bool>
 
 </resources>

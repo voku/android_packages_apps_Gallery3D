@@ -44,8 +44,7 @@ public class RandomDataSource implements Slideshow.DataSource {
         try {
             int max_resolution =
                     context.getResources().getInteger(com.cooliris.media.R.integer.max_resolution);
-            retVal = UriTexture.createFromUri(context, uri,
-                    max_resolution, max_resolution, cacheId, null);
+            retVal = UriTexture.createFromUri(context, uri, max_resolution, max_resolution, cacheId, null);
             if (retVal != null) {
                 retVal = Util.rotate(retVal, list.orientation[index]);
             }

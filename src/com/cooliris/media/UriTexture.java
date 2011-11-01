@@ -112,7 +112,7 @@ public class UriTexture extends Texture {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        options.inDither = true;
+        options.inDither = false;
         long crc64 = 0;
         Bitmap bitmap = null;
         if (uri.startsWith(ContentResolver.SCHEME_CONTENT)) {
@@ -281,7 +281,7 @@ public class UriTexture extends Texture {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;
             options.inPreferredConfig = Bitmap.Config.RGB_565;
-            options.inDither = true;
+            options.inDither = false;
             options.inSampleSize = 1;
             options.inPurgeable = true;
             if (crc64 != 0) {
