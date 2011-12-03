@@ -28,7 +28,6 @@ import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
 import android.util.FloatMath;
-import android.text.FriBidi;
 
 import com.cooliris.app.App;
 
@@ -78,7 +77,6 @@ public final class StringTexture extends Texture {
 
     public StringTexture(String string) {
         mString = string;
-        mRTL = FriBidi.isRTL();
         mConfig = Config.DEFAULT_CONFIG_SCALED;
     }
 
@@ -88,7 +86,6 @@ public final class StringTexture extends Texture {
 
     public StringTexture(String string, Config config, int width, int height) {
         mString = string;
-        mRTL = FriBidi.isRTL();
         mConfig = config;
         mWidth = width;
         mHeight = height;
