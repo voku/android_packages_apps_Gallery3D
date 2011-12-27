@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.widget.Toast;
+import android.os.Looper;
 
 import java.util.HashMap;
 import java.util.TimeZone;

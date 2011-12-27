@@ -30,6 +30,7 @@ public abstract class Texture {
     int mId;
     int mWidth;
     int mHeight;
+    int mLoadAttempts;
     float mNormalizedWidth;
     float mNormalizedHeight;
     Bitmap mBitmap;

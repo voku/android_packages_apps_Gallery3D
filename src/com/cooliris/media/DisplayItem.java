@@ -27,6 +27,7 @@ import com.cooliris.media.FloatUtils;
  * A simple structure for a MediaItem that can be rendered.
  */
 public final class DisplayItem {
+    private static final int MAX_LOAD_ATTEMPTS = 3;
     private static final float STACK_SPACING = 0.2f;
     private DirectLinkedList.Entry<DisplayItem> mAnimatablesEntry = new DirectLinkedList.Entry<DisplayItem>(this);
     private static final Random random = new Random();
@@ -139,7 +140,12 @@ public final class DisplayItem {
 
     public Texture getScreennailImage(Context context) {
         Texture texture = mScreennailImage;
-        if (texture == null || texture.mState == Texture.STATE_ERROR) {
+        int count=0;
+        if (texture == null || (texture.mState == Texture.STATE_ERROR && texture.mLoadAttempts < MAX_LOAD_ATTEMPTS)) {
+            if (texture != null) {
+                count=texture.mLoadAttempts;
+            }
+
             MediaSet parentMediaSet = mItemRef.mParentMediaSet;
             if (parentMediaSet != null && parentMediaSet.mDataSource.getThumbnailCache() == LocalDataSource.sThumbnailCache) {
                 if (mItemRef.mId != Shared.INVALID && mItemRef.mId != 0) {
@@ -151,6 +157,14 @@ public final class DisplayItem {
                 texture = new UriTexture(mItemRef.mScreennailUri);
                 ((UriTexture) texture).setCacheId(Utils.Crc64Long(mItemRef.mFilePath));
             }
+
+            // Try loading texture in error state MAX_LOAD_ATTEMPTS times
+            if (mScreennailImage == null) {
+                texture.mLoadAttempts = 0;
+            } else {
+                texture.mLoadAttempts=count+1;
+            }
+
             if (texture != null) {
                 texture.mIsScreennail = true;
             }

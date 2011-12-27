@@ -150,6 +150,8 @@ public final class MediaItemTexture extends Texture {
                                     max_resolution, max_resolution,
                                     Utils.Crc64Long(item.mFilePath), null);
                         }
+                    } catch (OutOfMemoryError err) {
+                        Log.e(TAG, "Thumbnail creation fail, outofmemory");
                     } catch (IOException e) {
                         ;
                     } catch (URISyntaxException e) {

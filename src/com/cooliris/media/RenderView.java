@@ -241,8 +241,9 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                         Bitmap.Config config = bitmap.getConfig();
                         if (config == null)
                             config = Bitmap.Config.RGB_565;
-                        if (width * height >= 512 * 512)
+                        if ((width * height >= 512 * 512) && (config != Bitmap.Config.ARGB_8888)) {
                             config = Bitmap.Config.RGB_565;
+                        }
                         Bitmap padded = Bitmap.createBitmap(paddedWidth, paddedHeight, config);
                         Canvas canvas = new Canvas(padded);
                         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -257,6 +258,8 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                     texture.mNormalizedWidth = 1.0f;
                     texture.mNormalizedHeight = 1.0f;
                 }
+            } else {
+               texture.mState = Texture.STATE_ERROR;
             }
             texture.mBitmap = bitmap;
         } catch (Exception e) {
@@ -354,7 +357,7 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
     }
 
     private void queueLoad(final Texture texture, boolean highPriority) {
-    	// Allow the texture to defer queuing.
+        // Allow the texture to defer queuing.
         if (!texture.shouldQueue()) {
             return;
         }
@@ -522,8 +525,14 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                 texture = outputQueue.pollFirst();
             }
             if (texture != null) {
-                // Extract the bitmap from the texture.
-                uploadTexture(texture, textureId);
+                if (texture.mState==Texture.STATE_ERROR) {
+                    Log.w(TAG, "Texture bitmap is null. Skipping upload");
+                    texture.mId = 0;
+                    texture.mBitmap = null;
+                } else {
+                    // Extract the bitmap from the texture.
+                    uploadTexture(texture, textureId);
+                }
 
                 // Decrement the loading count.
                 --mLoadingCount;
@@ -687,11 +696,12 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
             }
 
             // Clear the depth buffer.
-            gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             gl.glEnable(GL11.GL_SCISSOR_TEST);
             gl.glScissor(0, 0, getWidth(), getHeight());
+            gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
             // Run the opaque pass.
             gl.glDisable(GL11.GL_BLEND);
             final ArrayList<Layer> opaqueList = lists.opaqueList;
