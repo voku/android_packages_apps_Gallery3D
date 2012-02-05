@@ -19,6 +19,7 @@ package com.cooliris.media;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -134,6 +135,8 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
         super(context);
         setBackgroundDrawable(null);
         setFocusable(true);
+        setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        getHolder().setFormat(PixelFormat.RGBA_8888);
         setRenderer(this);
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         if (sCachedTextureLoadThread == null) {
@@ -231,8 +234,6 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                 int height = bitmap.getHeight();
                 texture.mWidth = width;
                 texture.mHeight = height;
-                if (width<=128 || height<=128)
-                {
                     // Create a padded bitmap if the natural size is not a power of
                     // 2.
                     if (!Shared.isPowerOf2(width) || !Shared.isPowerOf2(height)) {
@@ -241,8 +242,8 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                         Bitmap.Config config = bitmap.getConfig();
                         if (config == null)
                             config = Bitmap.Config.RGB_565;
-                        if ((width * height >= 512 * 512) && (config != Bitmap.Config.ARGB_8888)) {
-                            config = Bitmap.Config.RGB_565;
+                        if ((width * height >= 512 * 512) {
+                            config = Bitmap.Config.ARGB_8888;
                         }
                         Bitmap padded = Bitmap.createBitmap(paddedWidth, paddedHeight, config);
                         Canvas canvas = new Canvas(padded);
@@ -253,7 +254,6 @@ public final class RenderView extends GLSurfaceView implements GLSurfaceView.Ren
                         // coordinates.
                         texture.mNormalizedWidth = (float) width / (float) paddedWidth;
                         texture.mNormalizedHeight = (float) height / (float) paddedHeight;
-                    }
                 } else {
                     texture.mNormalizedWidth = 1.0f;
                     texture.mNormalizedHeight = 1.0f;

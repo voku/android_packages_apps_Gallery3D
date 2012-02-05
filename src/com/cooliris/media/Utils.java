@@ -39,6 +39,11 @@ import android.graphics.RectF;
 import android.graphics.Matrix;
 import android.graphics.Canvas;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Matrix;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
@@ -131,7 +136,6 @@ public class Utils {
             retVal.setDensity(bitmap.getDensity());
             canvas.setBitmap(retVal);
             canvas.drawBitmap(bitmap, srcR, dstR, paint);
-
             return retVal;
         } else {
             return bitmap;
