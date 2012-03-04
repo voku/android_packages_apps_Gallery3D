@@ -65,7 +65,7 @@ public class App {
     public static final int RESPATCH_DIVISOR = 9;
 
     private final Context mContext;
-    private final HandlerThread mHandlerThread = new HandlerThread("AppHandlerThread");
+
     private final Handler mHandler;	
     
     private ReverseGeocoder mReverseGeocoder = null;
@@ -99,8 +99,7 @@ public class App {
 			RESPATCH_FACTOR = (int) (Runtime.getRuntime().maxMemory()/1048576) / RESPATCH_DIVISOR;
 		}
 
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
+        mHandler = new Handler(Looper.getMainLooper());
 		
 	    mReverseGeocoder = new ReverseGeocoder(mContext);					
 	}
@@ -108,7 +107,6 @@ public class App {
 	public void shutdown() {
         dismissToast();
         mReverseGeocoder.shutdown();
-        mHandlerThread.quit();
         
         // unregister
         mMap.remove(mContext);

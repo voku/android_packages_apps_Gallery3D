@@ -18,6 +18,7 @@
 
     <integer name="max_resolution">1024</integer>
     <integer name="max_resolution_screennail">512</integer>
-    <bool name="button_brightness_override">true</bool>
+    <bool name="button_brightness_override">false</bool>
+    <bool name="use_32bpp_display">false</bool>
 
 </resources>

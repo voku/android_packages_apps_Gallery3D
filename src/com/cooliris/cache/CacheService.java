@@ -85,9 +85,9 @@ public final class CacheService extends IntentService {
 
     // Wait 0.5 seconds to start the thumbnailer so that the application can load
     // without any overheads.
-    private static final int THUMBNAILER_WAIT_IN_MS = 250;
-    private static final int DEFAULT_THUMBNAIL_WIDTH = 256;
-    private static final int DEFAULT_THUMBNAIL_HEIGHT = 192;
+    private static final int THUMBNAILER_WAIT_IN_MS = 500;
+    private static final int DEFAULT_THUMBNAIL_WIDTH = 128;
+    private static final int DEFAULT_THUMBNAIL_HEIGHT = 96;
 
     public static final String DEFAULT_IMAGE_SORT_ORDER = Images.ImageColumns.DATE_TAKEN + " ASC";
     public static final String DEFAULT_VIDEO_SORT_ORDER = Video.VideoColumns.DATE_TAKEN + " ASC";
